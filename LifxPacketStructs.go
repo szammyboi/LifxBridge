@@ -8,6 +8,8 @@ const (
 	AcknowledgementPkt uint16 = 45
 )
 
+const LifxBroadcast = "255.255.255.255:56700"
+
 type Header struct {
 	size         uint16
 	protocol     uint16 `bits:"12"`
