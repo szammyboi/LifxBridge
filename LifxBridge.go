@@ -1,6 +1,8 @@
 package LifxBridge
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Discovery() {
 	fmt.Println("Lifx Bridge Starting...")
