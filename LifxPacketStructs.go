@@ -6,6 +6,7 @@ const (
 	GetPowerPkt        uint16 = 20
 	GetColorPkt        uint16 = 101
 	AcknowledgementPkt uint16 = 45
+	GetVersionPkt      uint16 = 32
 )
 
 const LifxBroadcast = "255.255.255.255:56700"
@@ -37,6 +38,12 @@ type LightColorState struct {
 	power      uint16
 	label      [32]byte
 	_          [8]byte
+}
+
+type VersionState struct {
+	vendor  uint32
+	product uint32
+	_       [4]byte
 }
 
 func AckReceived(header Header) bool {

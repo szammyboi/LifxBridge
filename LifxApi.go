@@ -15,7 +15,8 @@ type Light interface {
 }
 
 type LifxLight struct {
-	ip string
+	ip       string
+	features LifxFeatures
 }
 
 func (light LifxLight) UpdateDetails() bool {
@@ -28,14 +29,21 @@ func (light LifxLight) UpdateDetails() bool {
 		msg_type:    GetColorPkt,
 	}
 
+	// read into multiple with from bytes
 	var respHeader Header
 	var respState LightColorState
 	resp := SendUDP(light.ip, BitExport.ToBytes(header))
 	BitExport.FromBytes(resp.data[:36], &respHeader)
 	BitExport.FromBytes(resp.data[36:], &respState)
 
+	var selector string
+	for _, hex := range respHeader.target {
+		selector += fmt.Sprintf("%x", hex)
+	}
+
 	// have bitexport be able to marshal into multiple interfaces (variadic)
 	fmt.Printf("Label: %s\n", string(respState.label[:]))
+	fmt.Printf("Selector: %s\n", selector)
 	fmt.Printf(" Power: %d\n", map_range(int64(respState.power), 0, math.MaxUint16, 0, 1))
 	fmt.Printf(" Hue: %d\n", map_range(int64(respState.hue), 0, math.MaxUint16, 0, 360))
 	fmt.Printf(" Saturation: %.2f\n", map_float(float64(respState.saturation), 0, math.MaxUint16, 0, 1))

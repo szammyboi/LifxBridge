@@ -1,6 +1,8 @@
 package LifxBridge
 
 import (
+	"fmt"
+
 	"github.com/szammyboi/BitExport"
 )
 
@@ -21,10 +23,12 @@ func Discovery() {
 	// server code will not see any of this
 	// nah it will run this so idk
 	for _, resp := range resps {
+		// new light func to auto get features
 		light := LifxLight{
 			ip: resp.addr,
 		}
-
+		light.features = light.GetProduct()
+		fmt.Println(light)
 		light.UpdateDetails()
 	}
 }
