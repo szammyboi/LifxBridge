@@ -2,7 +2,8 @@ package LifxBridge
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
+	"log"
 	"os"
 
 	"github.com/szammyboi/BitExport"
@@ -11,16 +12,20 @@ import (
 // this should be a part of the light struct
 
 type LifxFeatures struct {
-	Name      string
-	MultiZone bool
+	name      string
+	multizone bool
+	color     bool
 }
 
-func (light LifxLight) GetProduct() LifxFeatures {
-	// figure out how to not do this
-	jsonFile, _ := os.Open("/home/szammy/code/go/Eos/Tools/LifxBridge/products.json")
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+func (light *LifxLight) GetProduct() {
+	jsonFile, _ := os.Open("./products.json")
+	byteValue, _ := io.ReadAll(jsonFile)
+
 	var i []map[string]interface{}
-	json.Unmarshal(byteValue, &i)
+	err := json.Unmarshal(byteValue, &i)
+	if err != nil {
+		log.Fatal(err)
+	}
 	products := i[0]["products"].([]interface{})
 
 	header := Header{
@@ -46,11 +51,11 @@ func (light LifxLight) GetProduct() LifxFeatures {
 		feats := p["features"].(map[string]interface{})
 		pid := uint32(p["pid"].(float64))
 		if pid == respVersion.product {
-			features.MultiZone = feats["multizone"].(bool)
-			features.Name = name
+			features.multizone = feats["multizone"].(bool)
+			features.color = feats["color"].(bool)
+			features.name = name
 			break
 		}
 	}
-
-	return features
+	light.features = features
 }

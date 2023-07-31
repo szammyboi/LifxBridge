@@ -23,12 +23,7 @@ func Discovery() {
 	// server code will not see any of this
 	// nah it will run this so idk
 	for _, resp := range resps {
-		// new light func to auto get features
-		light := LifxLight{
-			ip: resp.addr,
-		}
-		light.features = light.GetProduct()
+		light := NewLight(resp.addr)
 		fmt.Println(light)
-		light.UpdateDetails()
 	}
 }

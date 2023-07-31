@@ -19,7 +19,14 @@ type LifxLight struct {
 	features LifxFeatures
 }
 
-func (light LifxLight) UpdateDetails() bool {
+func NewLight(ipAddr string) LifxLight {
+	var light LifxLight
+	light.ip = ipAddr
+	light.UpdateDetails()
+	light.GetProduct()
+	return light
+}
+func (light *LifxLight) UpdateDetails() bool {
 	header := Header{
 		size:        36,
 		protocol:    1024,
